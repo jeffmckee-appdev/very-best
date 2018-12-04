@@ -16,6 +16,10 @@ class VenuesController < ApplicationController
   def show
     @bookmark = Bookmark.new
     @venue = Venue.find(params.fetch("id"))
+    @neighborhoods = Neighborhood.all
+    @dishes = Dish.all
+    @bookmarks = Bookmark.all
+    @bookmarked_dishes = Bookmark.where("venue_id = "+params.fetch("id")).pluck("dish_id").uniq
 
     render("venues_templates/show.html.erb")
   end
