@@ -1,115 +1,137 @@
 <div class="page-header">
-  <h1>
-    Dishes
-    <a href="/dishes/new" class="btn btn-lg btn-success">New Dish</a>
-  </h1>
-</div><div class="row mb-1">
-  <div class="col-md-12">
-    <%= search_form_for @q, :class => "collapse", :id => "dishes_filters" do |f| %>
-      <p class="lead">Narrow results:</p>
+</div>
+<div class="container mt-4">
+  <div class="row mt-2 mb-1">
+    <div class="col-md-3">
+      <div class="row mb-1">
+        <div class="col-md-12">
+          <%= search_form_for @q, :class => "collapse", :id => "dishes_filters" do |f| %>
+            <p class="lead">Narrow results:</p>
+            <div class="form-group">
+              <%= f.label :name_cont, "Name contains" %>
+              <%= f.text_field :name_cont, :class => "form-control", :placeholder => "Name contains" %>
+            </div>
+            <div class="form-group">
+              <%= f.label :created_at, "Created at" %>
+              <div class="row">
+                <div class='col-md-6 mb-1'>
+                  <div class='input-group date' id='created_atgteqPicker'>
+                    <%= f.text_field :created_at_gteq, :class => "form-control", :placeholder => "Created at greater than or equal to" %>
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                </div>
+                <div class='col-md-6'>
+                  <div class='input-group date' id='created_atlteqPicker'>
+                    <%= f.text_field :created_at_lteq, :class => "form-control", :placeholder => "Created at less than or equal to" %>
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script type="text/javascript">
+              $(function () {
+                  $('#created_atgteqPicker').datetimepicker({
+                      format: 'YYYY-MM-DD hh:mm:SS'
+                  });
+                  $('#created_atlteqPicker').datetimepicker({
+                      useCurrent: false,
+                      format: 'YYYY-MM-DD hh:mm:SS'
+                  });
+                  $('#created_atgteqPicker').on("dp.change", function (e) {
+                      $('#created_atlteqPicker').data("DateTimePicker").minDate(e.date);
+                  });
+                  $('#created_atlteqPicker').on("dp.change", function (e) {
+                      $('#created_atgteqPicker').data("DateTimePicker").maxDate(e.date);
+                  });
+              });
+            </script>
+            <div class="form-group">
+              <%= f.label :cuisine_name_cont, "Cuisine name contains" %>
+              <%= f.text_field :cuisine_name_cont, :class => "form-control", :placeholder => "Cuisine name contains" %>
+            </div>
+            <div class="form-group">
+              <%= f.label :bookmarks_notes_cont, "Bookmark notes contains" %>
+              <%= f.text_field :bookmarks_notes_cont, :class => "form-control", :placeholder => "Bookmark notes contains" %>
+            </div>
+            <div class="form-group">
+              <%= f.label :fans_username_cont, "User username contains" %>
+              <%= f.text_field :fans_username_cont, :class => "form-control", :placeholder => "User username contains" %>
+            </div>
+            <div class="col-md-3">
+              <%= f.label :specialists_name_cont, "Venue name contains" %>
+              <%= f.text_field :specialists_name_cont, :class => "form-control", :placeholder => "Venue name contains" %>
+            </div>
+            <%= f.submit :class => "btn btn-primary btn-block mb-1" %>
+            <a href="/dishes" class="btn btn-secondary btn-block mb-1">Clear filters</a>
+          <% end %>
+          <a class="btn btn-secondary btn-block mb-1" data-toggle="collapse" href="#dishes_filters">
+            Show Filters
+          </a>
+        </div>
+      </div>
+    </div>
 
-        <div class="form-group">
-    <%= f.label :name_cont, "Name contains" %>
-    <%= f.text_field :name_cont, :class => "form-control", :placeholder => "Name contains" %>
+  <div class="col-md-6">
+    <div class="card">
+      <table class="table table-striped table-hover">
+        <tr>
+          <th>
+            The very best...
+          </th>
+
+          <th>
+            is at...
+          </th>
+
+          <th>
+
+          </th>
+        </tr>
+        <% @dishes.each do |dishes| %>
+  <tr>
+    <td>
+      <a href="/dishes/<%=dishes.id%>"> 
+      <%= dishes.name %>
+    </td>
+
+    <td>
+      
+      <% if dishes.specialists[0] != nil%>
+      <a href="/venues/<%=dishes.specialists[0].id%>">
+        <%=dishes.specialists[0].name %> </a>
+        <% end %>
+    </td>
+    
+    <td>
+      
+      <a href="/cuisines/<%=dishes.cuisine.id%>">
+        <%=dishes.cuisine.name %></a>
+      
+    </td>
+
+
+    
+  </tr>
+  <% end %>
+      </table>
+
+      <div class="card-footer text-center">
+        
+      </div>
+    </div>
   </div>
 
-<div class="form-group">
-          <%= f.label :created_at, "Created at" %>
-          <div class="row">
-            <div class='col-md-6 mb-1'>
-              <div class='input-group date' id='created_atgteqPicker'>
-                  <%= f.text_field :created_at_gteq, :class => "form-control", :placeholder => "Created at greater than or equal to" %>
-                  <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
-                  </span>
-              </div>
-            </div>
-
-            <div class='col-md-6'>
-              <div class='input-group date' id='created_atlteqPicker'>
-                  <%= f.text_field :created_at_lteq, :class => "form-control", :placeholder => "Created at less than or equal to" %>
-                  <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
-                  </span>
-              </div>
-            </div>
-          </div>
-      </div>
-      <script type="text/javascript">
-          $(function () {
-              $('#created_atgteqPicker').datetimepicker({
-                  format: 'YYYY-MM-DD hh:mm:SS'
-              });
-              $('#created_atlteqPicker').datetimepicker({
-                  useCurrent: false,
-                  format: 'YYYY-MM-DD hh:mm:SS'
-              });
-              $('#created_atgteqPicker').on("dp.change", function (e) {
-                  $('#created_atlteqPicker').data("DateTimePicker").minDate(e.date);
-              });
-              $('#created_atlteqPicker').on("dp.change", function (e) {
-                  $('#created_atgteqPicker').data("DateTimePicker").maxDate(e.date);
-              });
-          });
-      </script>
-
-        <div class="form-group">
-      <%= f.label :cuisine_name_cont, "Cuisine name contains" %>
-      <%= f.text_field :cuisine_name_cont, :class => "form-control", :placeholder => "Cuisine name contains" %>
-    </div>
-
-<div class="form-group">
-      <%= f.label :bookmarks_notes_cont, "Bookmark notes contains" %>
-      <%= f.text_field :bookmarks_notes_cont, :class => "form-control", :placeholder => "Bookmark notes contains" %>
-    </div>
-
-<div class="form-group">
-      <%= f.label :fans_username_cont, "User username contains" %>
-      <%= f.text_field :fans_username_cont, :class => "form-control", :placeholder => "User username contains" %>
-    </div>
-
-<div class="form-group">
-      <%= f.label :specialists_name_cont, "Venue name contains" %>
-      <%= f.text_field :specialists_name_cont, :class => "form-control", :placeholder => "Venue name contains" %>
-    </div>
-
-      <%= f.submit :class => "btn btn-primary btn-block mb-1" %>
-
-      <a href="/dishes" class="btn btn-secondary btn-block mb-1">Clear filters</a>
-    <% end %>
-    <a class="btn btn-secondary btn-block mb-1" data-toggle="collapse" href="#dishes_filters">
-      Show Filters
+  <div class="col-md-3">
+    <a href="/venues/new" class="btn btn-block btn-success">
+      Add a new venue
     </a>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-12">
-    <table class="table table-striped table-hover">
-      <tr>
-        <th>Name</th>
-        <th>Cuisine</th>
-        <th>Actions</th>
-      </tr>
-
-      <% @dishes.each do |dish| %>
-      <tr>
-        <td><%= dish.name %></td>
-        <td>
-          <% if dish.cuisine.present? %>
-            <a href="/cuisines/<%= dish.cuisine.id %>">
-              <%= dish.cuisine.name %>
-            </a>
-          <% end %>
-        </td>
-        <td>
-          <a href="/dishes/<%= dish.id %>" class="btn btn-primary">Show</a>
-          <a href="/dishes/<%= dish.id %>/edit" class="btn btn-warning">Edit</a>
-          <a href="/delete_dish/<%= dish.id %>" class="btn btn-danger" rel="nofollow">Delete</a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
-    <%= paginate @dishes, theme: 'twitter-bootstrap-4' %>
   </div>
-</div>
+</body>
+</html>
