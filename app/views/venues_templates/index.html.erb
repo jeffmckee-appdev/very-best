@@ -1,127 +1,102 @@
-<div class="page-header">
-  <h1>
-    Venues
-    <a href="/venues/new" class="btn btn-lg btn-success">New Venue</a>
-  </h1>
-</div><div class="row mb-1">
-  <div class="col-md-12">
-    <%= search_form_for @q, :class => "collapse", :id => "venues_filters" do |f| %>
-      <p class="lead">Narrow results:</p>
 
-        <div class="form-group">
-    <%= f.label :name_cont, "Name contains" %>
-    <%= f.text_field :name_cont, :class => "form-control", :placeholder => "Name contains" %>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>VeryBest</title>
 
-<div class="form-group">
-          <%= f.label :created_at, "Created at" %>
-          <div class="row">
-            <div class='col-md-6 mb-1'>
-              <div class='input-group date' id='created_atgteqPicker'>
-                  <%= f.text_field :created_at_gteq, :class => "form-control", :placeholder => "Created at greater than or equal to" %>
-                  <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
-                  </span>
-              </div>
-            </div>
 
-            <div class='col-md-6'>
-              <div class='input-group date' id='created_atlteqPicker'>
-                  <%= f.text_field :created_at_lteq, :class => "form-control", :placeholder => "Created at less than or equal to" %>
-                  <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
-                  </span>
-              </div>
-            </div>
-          </div>
-      </div>
-      <script type="text/javascript">
-          $(function () {
-              $('#created_atgteqPicker').datetimepicker({
-                  format: 'YYYY-MM-DD hh:mm:SS'
-              });
-              $('#created_atlteqPicker').datetimepicker({
-                  useCurrent: false,
-                  format: 'YYYY-MM-DD hh:mm:SS'
-              });
-              $('#created_atgteqPicker').on("dp.change", function (e) {
-                  $('#created_atlteqPicker').data("DateTimePicker").minDate(e.date);
-              });
-              $('#created_atlteqPicker').on("dp.change", function (e) {
-                  $('#created_atgteqPicker').data("DateTimePicker").maxDate(e.date);
-              });
-          });
-      </script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
-        <div class="form-group">
-      <%= f.label :bookmarks_notes_cont, "Bookmark notes contains" %>
-      <%= f.text_field :bookmarks_notes_cont, :class => "form-control", :placeholder => "Bookmark notes contains" %>
+  <style>
+    /* Only necessary if you are using navbar-fixed-top */
+    body {
+      padding-top: 60px;
+    }
+  </style>
+
+  <link rel="stylesheet" media="all" href="/assets/application-9644eb475d3bf8c642abc71074642eae4f027cea65d4aec4553ae97d4dde88ee.css" />
+  <script src="/assets/application-1ab3ed18f9c2f6e270f40d47082f8c4d62328d6a543735e9bbce394ed953fed8.js"></script>
+  <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="I9m3FTTHx7YQMX/7eDON9GHBVMb0s4UjmvEZdjjfvrFBXw/2/7bRHd+Y1BQJi7WGFOgslMzfqfeLhPIo4dEgng==" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+<body>
+
+  <div class="container mt-4">
+
+
+    <div class="row mt-2 mb-1">
+  <div class="col-md-3">
+    <form class="collapse" id="venues_filters" action="/venues" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+    <p class="lead">Narrow results:</p>
+
+    <div class="form-group">
+      <label for="q_name_cont">Name contains</label>
+      <input class="form-control" placeholder="Name contains" type="text" name="q[name_cont]" id="q_name_cont" />
     </div>
 
-<div class="form-group">
-      <%= f.label :neighborhood_name_cont, "Neighborhood name contains" %>
-      <%= f.text_field :neighborhood_name_cont, :class => "form-control", :placeholder => "Neighborhood name contains" %>
+    <div class="form-group">
+      <label for="q_bookmarks_notes_or_specialties_name_cont">Bookmarked dish name contains</label>
+      <input class="form-control" placeholder="Bookmarked dish name contains" type="text" name="q[bookmarks_notes_or_specialties_name_cont]" id="q_bookmarks_notes_or_specialties_name_cont" />
     </div>
 
-<div class="form-group">
-      <%= f.label :fans_username_cont, "User username contains" %>
-      <%= f.text_field :fans_username_cont, :class => "form-control", :placeholder => "User username contains" %>
+    <div class="form-group">
+      <label for="q_neighborhood_name_cont">Neighborhood name contains</label>
+      <input class="form-control" placeholder="Neighborhood name contains" type="text" name="q[neighborhood_name_cont]" id="q_neighborhood_name_cont" />
     </div>
 
-<div class="form-group">
-      <%= f.label :specialties_name_cont, "Dish name contains" %>
-      <%= f.text_field :specialties_name_cont, :class => "form-control", :placeholder => "Dish name contains" %>
-    </div>
+    <input type="submit" name="commit" value="Search" class="btn btn-primary btn-block mb-1" data-disable-with="Search" />
 
-      <%= f.submit :class => "btn btn-primary btn-block mb-1" %>
-
-      <a href="/venues" class="btn btn-secondary btn-block mb-1">Clear filters</a>
-    <% end %>
-    <a class="btn btn-secondary btn-block mb-1" data-toggle="collapse" href="#venues_filters">
+    <a href="/venues" class="btn btn-secondary btn-block mb-1">Clear filters</a>
+</form>    <a class="btn btn-secondary btn-block mb-1" data-toggle="collapse" href="#venues_filters">
       Show Filters
     </a>
   </div>
-</div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">
+          Places you've bookmarked
+        </h4>
+      </div>
+
+      <div class="card-body">
+        <div id="location_map" style="height: 360px;"></div>
+      </div>
+      <ul class="list-group list-group-flush">
+        <% @venues.each do |venue| %>
+          <li class="list-group-item">
+            <a href="/venues/<%=venue.id%>">
+              <%= venue.name%>
+            </a>
+
+            <small class="text-muted float-right">
+              <%= @neighborhoods.where("id ="+venue.neighborhood_id.to_s).pluck("name")[0]%>,
+              <%= @neighborhoods.where("id ="+venue.neighborhood_id.to_s).pluck("city")[0]%>
+            </small>
+          </li>
+        <% end %>
+      </ul>
 
 
-<div class="row m-b-2">
-  <div class="col-md-12">
-    <div>
-      <div id="location_map" style="height: 480px;"></div>
+      <div class="card-footer text-center">
+        
+      </div>
     </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-md-12">
-    <table class="table table-striped table-hover">
-      <tr>
-        <th>Name</th>
-        <th>Address</th>
-        <th>Neighborhood</th>
-        <th>Actions</th>
-      </tr>
-
-      <% @venues.each do |venue| %>
-      <tr>
-        <td><%= venue.name %></td>
-        <td><%= venue.address %></td>
-        <td>
-          <% if venue.neighborhood.present? %>
-            <a href="/neighborhoods/<%= venue.neighborhood.id %>">
-              <%= venue.neighborhood.name %>
-            </a>
-          <% end %>
-        </td>
-        <td>
-          <a href="/venues/<%= venue.id %>" class="btn btn-primary">Show</a>
-          <a href="/venues/<%= venue.id %>/edit" class="btn btn-warning">Edit</a>
-          <a href="/delete_venue/<%= venue.id %>" class="btn btn-danger" rel="nofollow">Delete</a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
-    <%= paginate @venues, theme: 'twitter-bootstrap-4' %>
+  <div class="col-md-3">
+    <a href="/venues/new" class="btn btn-block btn-success">
+      Add a new venue
+    </a>
   </div>
 </div>
 
@@ -130,8 +105,12 @@
 <script>
   handler = Gmaps.build('Google');
   handler.buildMap({ provider: {}, internal: {id: 'location_map'}}, function(){
-    markers = handler.addMarkers(<%= raw @location_hash.to_json %>);
+    markers = handler.addMarkers([]);
     handler.bounds.extendWith(markers);
     handler.fitMapToBounds();
   });
 </script>
+
+  </div>
+</body>
+</html>
