@@ -41,15 +41,15 @@
             right now
           </small>
         </li>
-
+ <% current_user.bookmarks.where("dish_id ="+@dish.id.to_s).each do |bookmarks| %>
           <li class="list-group-item">
             <p>
-              <a href="/venues/1886">
-                need to fix this
+              <a href="/venues/<%=bookmarks.venue_id%>">
+               <%= bookmarks.venue.name %>
               </a>
 
               <small class="float-right text-muted">
-                11 minutes ago
+                <%= time_ago_in_words(bookmarks.updated_at)%>
 
                 <a href="/bookmarks/2304/edit">
                   <i class="fa fa-fw fa-edit"></i>
@@ -62,6 +62,7 @@
             </p>
 
           </li>
+          <% end%>
       </ul>
 
       <div class="card-footer text-center">

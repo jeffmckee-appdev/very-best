@@ -103,7 +103,7 @@
                   <% if current_user.bookmarks.where("dish_id ="+dishes.id.to_s)[0] != nil%>
                     <a href="/venues/<%=dishes.specialists[0].id%>">
                       <%= current_user.bookmarks.where("dish_id ="+dishes.id.to_s)[0].venue.name %>
-                      
+                  
                   <% else %> 
                   <!--<select name="venue_id" id="venue_id" class="form-control form-control-sm mr-sm-1"><option value="">Choose a venue...</option>-->
                   
