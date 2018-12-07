@@ -91,56 +91,59 @@
 
             </th>
           </tr>
-          <% @dishes.each do |dishes| %>
+          <% @dishes.each do |dish| %>
             <tr>
               <td>
-                <a href="/dishes/<%=dishes.id%>">
-                  <%= dishes.name %>
+                <a href="/dishes/<%=dish.id%>">
+                  <%= dish.name %>
                 </td>
 
                 <td>
+                  <% if current_user.bookmarks.where("dish_id ="+dish.id.to_s)[0] != nil%>
+                    <a href="/venues/<%=current_user.bookmarks.where("dish_id ="+dish.id.to_s)[0].venue.id%>">
+                      <%= current_user.bookmarks.where("dish_id ="+dish.id.to_s)[0].venue.name %>
 
-                  <% if current_user.bookmarks.where("dish_id ="+dishes.id.to_s)[0] != nil%>
-                    <a href="/venues/<%=current_user.bookmarks.where("dish_id ="+dishes.id.to_s)[0].venue.id%>">
-                      <%= current_user.bookmarks.where("dish_id ="+dishes.id.to_s)[0].venue.name %>
-                      
-                  <% else %> 
-                  <!--<select name="venue_id" id="venue_id" class="form-control form-control-sm mr-sm-1"><option value="">Choose a venue...</option>-->
-                  
-                  <%= select_tag("venue_id", options_from_collection_for_select(Venue.all, :id, :name), :class => "form-control", include_blank: "Choose a venue...") %>
+                    <% else %>
+                      <form action="/create_bookmark" class="form-inline" method="post">
+                        <input type="hidden" name="dish_id" value=<%= dish.id%>>
+                        <input type="hidden" name="user_id" value=<%=current_user.id %>>
+                        <input type="hidden" name="notes" value = "">
+                        <%= select_tag("venue_id", options_from_collection_for_select(Venue.all, :id, :name), :class => "form-control", include_blank: "Choose a venue...") %>
+                        <button class="btn btn-primary btn-sm">
+                          <i class="fa fa-heart"></i>
+                        </button>
+                      </form>
+                    <% end %>
+                  </td>
+
+                  <td>
+
+                    <label>
+                      <span class="badge badge-primary">
+                        <%=dish.cuisine.name %>
+                      </span>
+
+
+                    </td>
+
+
+                  </tr>
                 <% end %>
-                </td>
+              </table>
 
-                <td>
+              <div class="card-footer text-center">
 
-                   <label>
-              <span class="badge badge-primary">
-              <%=dishes.cuisine.name %>
-            </span>
-              
-            
-                    
+              </div>
+            </div>
+          </div>
 
-                </td>
-
-
-              </tr>
-            <% end %>
-          </table>
-
-          <div class="card-footer text-center">
-
+          <div class="col-md-3">
+            <a href="/venues/new" class="btn btn-block btn-success">
+              Add a new venue
+            </a>
           </div>
         </div>
-      </div>
 
-      <div class="col-md-3">
-        <a href="/venues/new" class="btn btn-block btn-success">
-          Add a new venue
-        </a>
       </div>
-    </div>
-
-  </div>
-</body>
-</html>
+    </body>
+  </html>
