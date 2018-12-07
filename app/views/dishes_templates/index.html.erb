@@ -101,7 +101,7 @@
                 <td>
 
                   <% if current_user.bookmarks.where("dish_id ="+dishes.id.to_s)[0] != nil%>
-                    <a href="/venues/<%=dishes.specialists[0].id%>">
+                    <a href="/venues/<%=current_user.bookmarks.where("dish_id ="+dishes.id.to_s)[0].venue.id%>">
                       <%= current_user.bookmarks.where("dish_id ="+dishes.id.to_s)[0].venue.name %>
                       
                   <% else %> 
