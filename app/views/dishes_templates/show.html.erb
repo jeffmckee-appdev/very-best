@@ -21,8 +21,9 @@
             <input name="authenticity_token" type="hidden" value="SQbbH4k6BfSOOBZlvNhG/CCmgCH7/VdB+3I1kjrTzlKh426LqGlTfbwztbHDqLCEpYCP0mWVlpRRySOPlsQhPQ==">
 
 
-            <input type="hidden" name="dish_id" value="1810">
-            <input type="hidden" name="user_id" value="298">
+            <input type="hidden" name="dish_id" value="<%= @dish.id %>">
+            <input type="hidden" name="user_id" value="<%= current_user.id %>">
+            <input type="hidden" name="notes" value="">
 
             <!-- Label and input for venue_id -->
             <div class="form-group mr-sm-1">
