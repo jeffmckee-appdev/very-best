@@ -71,7 +71,7 @@
         <div id="location_map" style="height: 360px;"></div>
       </div>
       <ul class="list-group list-group-flush">
-       <% current_user.bookmarked_venues.uniq.each do |venue| %>
+       <% current_user.bookmarked_venues.where(:id => @venues.pluck("id")).uniq.each do |venue| %>
 
           <li class="list-group-item">
             <a href="/venues/<%=venue.id%>">

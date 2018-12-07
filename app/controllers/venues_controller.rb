@@ -12,7 +12,7 @@ class VenuesController < ApplicationController
   
     @location_data = []
 
-    @venues.where.not(:address_latitude => nil).each do |venue|
+    @venues.each do |venue|
     url_safe_street_address = URI.encode(venue.address)
     url = "https://maps.googleapis.com/maps/api/geocode/json?address="+url_safe_street_address+"&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
     raw_data = open(url).read
