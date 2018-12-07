@@ -71,7 +71,8 @@
         <div id="location_map" style="height: 360px;"></div>
       </div>
       <ul class="list-group list-group-flush">
-        <% @venues.each do |venue| %>
+       <% current_user.bookmarked_venues.uniq.each do |venue| %>
+
           <li class="list-group-item">
             <a href="/venues/<%=venue.id%>">
               <%= venue.name%>
