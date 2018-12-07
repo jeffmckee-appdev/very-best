@@ -40,7 +40,7 @@
                 <%= @venue.name%>
 
                 <small class="text-muted">
-                  <%= @neighborhoods.where("id ="+@venue.neighborhood_id.to_s).pluck("name")[0]%>,
+                  <%= @neighborhoods.where("id ="+@venue.neighborhood_id.to_s).pluck("name")[0]%>, <%= @venue.address%>
                 </small>
               </h4>
             </div>
@@ -138,9 +138,9 @@
         handler.buildMap({ provider: {}, internal: {id: 'location_map'}}, function(){
           markers = handler.addMarkers([
             {
-              "lat": ,
-              "lng": ,
-              "infowindow": "<h5>2018-12-04 19:51:03 UTC</h5><small></small>"
+              "lat": <%=@latitude%>,
+              "lng": <%=@longitude%>,
+              "infowindow": "<h5><%=@venue.name%></h5><small><%=@venue.address%></small>"
             }
           ]);
           handler.bounds.extendWith(markers);
