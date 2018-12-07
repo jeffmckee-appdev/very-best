@@ -8,7 +8,6 @@ class VenuesController < ApplicationController
       marker.lat venue.address_latitude
       marker.lng venue.address_longitude
       marker.infowindow "<h5><a href='/venues/#{venue.id}'>#{venue.created_at}</a></h5><small>#{venue.address_formatted_address}</small>"
-
     end
 
     render("venues_templates/index.html.erb")
@@ -22,6 +21,26 @@ class VenuesController < ApplicationController
     @bookmarks = Bookmark.all
     @bookmarked_dishes = Bookmark.where("venue_id = "+params.fetch("id")).pluck("dish_id").uniq
 
+    url_safe_street_address = URI.encode(@venue.address)
+
+    # ==========================================================================
+    # Your code goes below.
+    # The street address the user input is in the string @street_address.
+    # A URL-safe version of the street address, with spaces and other illegal
+    #   characters removed, is in the string url_safe_street_address.
+    # ==========================================================================
+
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address="+url_safe_street_address+"&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
+
+    raw_data = open(url).read
+
+    parsed_data = JSON.parse(raw_data)
+    
+    f = parsed_data.fetch("results").at(0)
+
+    @latitude = f.fetch("geometry").fetch("location").fetch("lat").to_s
+    @longitude = f.fetch("geometry").fetch("location").fetch("lng").to_s
+
     render("venues_templates/show.html.erb")
   end
 
@@ -32,11 +51,23 @@ class VenuesController < ApplicationController
   end
 
   def create
+    
+    url_safe_street_address = URI.encode(params.fetch("address"))
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address="+url_safe_street_address+"&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
+    raw_data = open(url).read
+    parsed_data = JSON.parse(raw_data)
+    f = parsed_data.fetch("results").at(0)
+
     @venue = Venue.new
 
+    @latitude = f.fetch("geometry").fetch("location").fetch("lat").to_s
+    @longitude = f.fetch("geometry").fetch("location").fetch("lng").to_s
     @venue.name = params.fetch("name")
     @venue.address = params.fetch("address")
     @venue.neighborhood_id = params.fetch("neighborhood_id")
+    @venue.address_formatted_address = url_safe_street_address
+    @venue.address_latitude = f.fetch("geometry").fetch("location").fetch("lat").to_s
+    @venue.address_longitude = f.fetch("geometry").fetch("location").fetch("lng").to_s
 
     save_status = @venue.save
 
