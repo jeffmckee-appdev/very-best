@@ -103,13 +103,22 @@
                   <% if dishes.specialists[0] != nil%>
                     <a href="/venues/<%=dishes.specialists[0].id%>">
                       <%=dishes.specialists[0].name %> </a>
-                  <% end %>
+                  <% else %> 
+                  <!--<select name="venue_id" id="venue_id" class="form-control form-control-sm mr-sm-1"><option value="">Choose a venue...</option>-->
+                  
+                  <%= select_tag("venue_id", options_from_collection_for_select(Venue.all, :id, :name), :class => "form-control", include_blank: "Choose a venue...") %>
+                <% end %>
                 </td>
 
                 <td>
 
-                  <a href="/cuisines/<%=dishes.cuisine.id%>">
-                    <%=dishes.cuisine.name %></a>
+                   <label>
+              <span class="badge badge-primary">
+              <%=dishes.cuisine.name %>
+            </span>
+              
+            
+                    
 
                 </td>
 
