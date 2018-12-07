@@ -62,7 +62,7 @@
                     </a>
 
                     <small class="float-right text-muted">
-                      about <%=(bookmark.updated_at)%> hour ago
+                      <%=time_ago_in_words(bookmark.created_at)%>
 
                       <a href="/bookmarks/<%=bookmark.id%>/edit">
                         <i class="fa fa-fw fa-edit"></i>
@@ -85,8 +85,9 @@
                   <input name="authenticity_token" type="hidden" value="LZLy8JGJqwRpwya/RxZBqdGf/xPLtOyi5N/jYIawvOoi8MmXchbHuuB5WklOTX52dPluVybVDIqXCuX/wh1fbA==">
 
 
-                  <input type="hidden" name="venue_id" value="110997">
-                  <input type="hidden" name="user_id" value="16629">
+                  <input type="hidden" name="venue_id" value=<%= @venue.id %>>
+                  <input type="hidden" name="user_id" value=<%=current_user.id %>>
+                  <input type="hidden" name="notes" value="">
 
                   <!-- Label and input for dish_id -->
                   <div class="form-group mr-sm-1">
