@@ -1,7 +1,7 @@
 class VenuesController < ApplicationController
   def index
     @q = Venue.ransack(params.fetch("q", nil))
-    @venues = @q.result(:distinct => true).includes(:bookmarks, :neighborhood, :fans, :specialties).page(params.fetch("page", nil))
+    @venues = @q.result(:distinct => true).includes(:bookmarks, :neighborhood, :fans, :specialties).page(params.fetch("page", nil)).per(10)
     @neighborhoods = Neighborhood.all
 
     # @location_hash = Gmaps4rails.build_markers(@venues.where.not(:address_latitude => nil)) do |venue, marker|
@@ -12,7 +12,7 @@ class VenuesController < ApplicationController
   
     @location_data = []
 
-    current_user.bookmarked_venues.where(:id => @venues.pluck("id")).uniq.each do |venue|
+    @venues.where.not(:address_latitude => nil).each do |venue|
     url_safe_street_address = URI.encode(venue.address)
     url = "https://maps.googleapis.com/maps/api/geocode/json?address="+url_safe_street_address+"&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
     raw_data = open(url).read
