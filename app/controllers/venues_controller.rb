@@ -4,24 +4,20 @@ class VenuesController < ApplicationController
     @venues = @q.result(:distinct => true).includes(:bookmarks, :neighborhood, :fans, :specialties).page(params.fetch("page", nil))
     @neighborhoods = Neighborhood.all
 
-    # @location_hash = Gmaps4rails.build_markers(@venues.where.not(:address_latitude => nil)) do |venue, marker|
-    #   marker.lat venue.address_latitude
-    #   marker.lng venue.address_longitude
-    #   marker.infowindow "<h5><a href='/venues/#{venue.id}'>#{venue.name}</a></h5><small>#{venue.address_formatted_address}</small>"
-    # end
-  
     @location_data = []
 
     current_user.bookmarked_venues.where(:id => @venues.pluck("id")).uniq.each do |venue|
-    url_safe_street_address = URI.encode(venue.address)
-    url = "https://maps.googleapis.com/maps/api/geocode/json?address="+url_safe_street_address+"&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
-    raw_data = open(url).read
-    parsed_data = JSON.parse(raw_data)
-    f = parsed_data.fetch("results").at(0)
-    lat = f.fetch("geometry").fetch("location").fetch("lat").to_s
-    lng = f.fetch("geometry").fetch("location").fetch("lng").to_s
-    venue = venue
-    @location_data.push([lat,lng,venue])
+      url_safe_street_address = URI.encode(venue.address)
+      url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + url_safe_street_address + "&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
+      raw_data = open(url).read
+      parsed_data = JSON.parse(raw_data)
+      f = parsed_data.fetch("results").at(0)
+      if f != nil
+        lat = f.fetch("geometry").fetch("location").fetch("lat").to_s
+        lng = f.fetch("geometry").fetch("location").fetch("lng").to_s
+        venue = venue
+        @location_data.push([lat, lng, venue])
+      end
     end
 
     render("venues_templates/index.html.erb")
@@ -33,7 +29,7 @@ class VenuesController < ApplicationController
     @neighborhoods = Neighborhood.all
     @dishes = Dish.all
     @bookmarks = Bookmark.all
-    @bookmarked_dishes = Bookmark.where("venue_id = "+params.fetch("id")).pluck("dish_id").uniq
+    @bookmarked_dishes = Bookmark.where("venue_id = " + params.fetch("id")).pluck("dish_id").uniq
 
     url_safe_street_address = URI.encode(@venue.address)
 
@@ -44,16 +40,17 @@ class VenuesController < ApplicationController
     #   characters removed, is in the string url_safe_street_address.
     # ==========================================================================
 
-    url = "https://maps.googleapis.com/maps/api/geocode/json?address="+url_safe_street_address+"&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + url_safe_street_address + "&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
 
     raw_data = open(url).read
 
     parsed_data = JSON.parse(raw_data)
-    
-    f = parsed_data.fetch("results").at(0)
 
-    @latitude = f.fetch("geometry").fetch("location").fetch("lat").to_s
-    @longitude = f.fetch("geometry").fetch("location").fetch("lng").to_s
+    f = parsed_data.fetch("results").at(0)
+    if f != nil
+      @latitude = f.fetch("geometry").fetch("location").fetch("lat").to_s
+      @longitude = f.fetch("geometry").fetch("location").fetch("lng").to_s
+    end
 
     render("venues_templates/show.html.erb")
   end
@@ -65,9 +62,8 @@ class VenuesController < ApplicationController
   end
 
   def create
-    
     url_safe_street_address = URI.encode(params.fetch("address"))
-    url = "https://maps.googleapis.com/maps/api/geocode/json?address="+url_safe_street_address+"&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + url_safe_street_address + "&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
     raw_data = open(url).read
     parsed_data = JSON.parse(raw_data)
     f = parsed_data.fetch("results").at(0)
