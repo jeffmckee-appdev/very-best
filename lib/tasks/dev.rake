@@ -128,6 +128,13 @@ namespace :dev do
       venue.name = venue_hash[:name]
       venue.address = venue_hash[:address]
       venue.neighborhood_id = neighborhood.try(:id)
+      url_safe_street_address = URI.encode(venue.address)
+      url = "https://maps.googleapis.com/maps/api/geocode/json?address="+url_safe_street_address+"&key=AIzaSyA5qwIlcKjijP_Ptmv46mk4cCjuWhSzS78"
+      raw_data = open(url).read
+      parsed_data = JSON.parse(raw_data)
+      f = parsed_data.fetch("results").at(0)
+      venue.address_latitude = f.fetch("geometry").fetch("location").fetch("lat")
+      venue.address_longitude = f.fetch("geometry").fetch("location").fetch("lng")
       venue.save
     end
 
